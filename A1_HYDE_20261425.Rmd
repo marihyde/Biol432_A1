@@ -1,0 +1,66 @@
+---
+title: "A1_HYDE_20261425"
+output:
+  html_document:
+    df_print: paged
+date: "2025-01-07"
+---
+
+
+The first section of code opens the updated measurements file, which includes calculated limb volumes. 
+head function is used to display a sample of the table. 
+```{r}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+
+Measurements<-read.csv("Measurements")
+head(Measurements)
+```
+
+
+Dplyr is used to order the rows in Measurements by Organism, observer, then limb volume, using the arrange function. 
+```{r}
+Sort_Species<- Measurements %>% arrange(Organism, Observer, Limb_volume)
+head(Sort_Species)
+```
+
+
+This section groups the data by each species using the group_by function. Then each volume is calculated using the mean function, and printed to display the average limb volume for each species. 
+```{r}
+Average_Volume<- Sort_Species %>% group_by(Organism) %>% summarize(Avg_Volume= mean(Limb_volume, na.rm=TRUE))
+print(Average_Volume)
+```
+This chunk sorts the data by observer and species using the group_by function. the Summarise function is counting the number of organisms viewed by each observer for each species, and displaying them as "ObservationCount" in the table. 
+```{r}
+number_observations<- Sort_Species %>% group_by(Observer, Organism) %>% summarise(ObservationCount=n(), .groups="drop")
+print(number_observations)
+```
+
+
+This chunk displays a boxplot showing the distribution of limb volumes across different species. 
+```{r}
+ggplot(Measurements, aes(x= Organism, y=Limb_volume))+
+  geom_boxplot()+
+  theme_light()+
+  labs(title= "Limb Volume as a Function of Species", 
+       x="Species",
+       y="Limb Volume")
+```
+
+This chunk of code converted the limb volume to elongated measurements, making it easier to see the distribution in the next section. 
+```{r}
+elongated_measurements<- Measurements %>% gather(key="Measurement_Type", value="limbvolume", Limb_volume)
+head(elongated_measurements)
+```
+
+This chunk is displaying the distribution of the elongated limb volume measurements for each species on a histogram. The function facet_wrap splits the data between species, for multiple histograms. 
+```{r}
+ggplot(elongated_measurements, aes(x=limbvolume))+
+  geom_histogram(bins=20, fill= "lightpink", color="black", alpha=1)+
+  facet_wrap(~Organism)+
+  theme_light()+
+  labs(title="Distribution of Limb Volume across Dog Species", x="Limb Volume", y="")
+```
+
+
