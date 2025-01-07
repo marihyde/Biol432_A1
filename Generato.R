@@ -20,3 +20,7 @@ My.Data<- data.frame(Organism= Organism, Limb_width= Limb_width, Limb_height=Lim
 head(My.Data)
 
 head(My.Data)
+
+print(My.Data)
+plot (x= My.Data$Limb_width, y= My.Data$Limb_height)
+ß
