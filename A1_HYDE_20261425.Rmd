@@ -1,10 +1,12 @@
 ---
-title: "A1_HYDE_20261425"
+title: "A1_HYDE_20261425, Mari Hyde"
 output:
   html_document:
     df_print: paged
 date: "2025-01-07"
 ---
+
+Repository: https://github.com/marihyde/Biol432_A1
 
 
 The first section of code opens the updated measurements file, which includes calculated limb volumes. 
@@ -17,6 +19,7 @@ library(tidyr)
 Measurements<-read.csv("Measurements")
 head(Measurements)
 ```
+
 
 
 Dplyr is used to order the rows in Measurements by Organism, observer, then limb volume, using the arrange function. 
