@@ -3,25 +3,70 @@ title: "Assignment 5"
 output: html_document
 date: "2025-02-03"
 ---
+Mari Hyde 20261425 
+Maddigan Kales 20259834
+Rachel Dolson 20339605
+Laavanya Joshi 20288965
+Emma Mitchell - 20296602
 
-```{}
+
+
+Repository: https://github.com/marihyde/Biol432_A1
 
 
 
+1. Loading Data: 
+
+
+```{r}
+library(dplyr)
+MData<-read.csv("Measurements")
+
+```
+
+
+Note: I had to change my species names to match the format first. 
+
+```{r}
+
+Measurements <- Measurements %>% #
+  mutate(Organism = case_when(
+    Organism == "Golden Retriever" ~ "Canis familiaris",
+    Organism == "Boxer" ~ "Canis lupus",
+    Organism == "German Shepard" ~ "Canis vulpes",
+    Organism == "Poodle" ~ "Canis latrans",
+    Organism == "Beagle" ~ "Canis brachyurus",
+    TRUE ~ Organism  # Keep original value if no match
+  ))
+
+MData<- Measurements
 
 ```
 
 
 
+1. creating a new column
 
 ```{r cars}
-summary(cars)
+
+MData <- MData %>%
+  mutate(sp = sub("^(\\w)\\w*\\s", "\\1. ", Organism))
 ```
 
 
+2. creating a new data set 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+
+MeasShort <- Measurements %>%
+  mutate(sp = sub("^(\\w)\\w*\\s", "\\1. ", Organism)) %>%
+  select(sp, everything(), -Organism)
 ```
 
+
+3. Saving the new dataset as a csv
+
+```{r}
+write.csv(MeasShort, "MeasShort.csv", row.names = FALSE)
+```
 
