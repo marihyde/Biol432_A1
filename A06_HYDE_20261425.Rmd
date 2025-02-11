@@ -1,0 +1,104 @@
+---
+title: "432 Assignment 6"
+output:
+  html_document: default
+  pdf_document: default
+date: "2025-02-10"
+---
+
+Github link: https://github.com/marihyde/Biol432_A1
+
+Loading packages:
+
+```{r}
+library(parallel)
+library(foreach)
+library(doParallel)
+
+```
+
+Finding how many cores:
+
+```{r}
+print(num_cores<-parallel::detectCores(logical=FALSE))
+```
+
+My computer has 4 cores. 
+
+For loop:
+
+```{r, warning=FALSE, message=FALSE}
+start_time<- Sys.time()
+for (i in 1:4000){
+  means<- mean(rnorm(100000, mean=10, sd=3))
+}
+
+end_time<-Sys.time()
+  
+```
+
+
+Finding the amount of time the loop will take:
+
+
+
+```{r}
+total_time<- end_time - start_time
+print(total_time)
+```
+
+It took 27.48 seconds to run the initial loop. 
+
+Detecting the number of available threads:
+
+```{r}
+num_threads<- parallel::detectCores() #logical cores/threads
+print(num_threads)
+
+```
+
+My computer has 8 threads. 
+
+Calculating speed increase:
+
+```{r}
+speed<- total_time / num_cores
+print(speed)
+
+```
+
+
+Tt would take 6.8 seconds to complete the task when running the code in parallel, compared to 27 seconds when running it using a single core. 
+
+Running the loop in parallel:
+
+```{r, message= FALSE, warning=FALSE}
+
+Cores <- parallel::detectCores() - 1
+cl <- parallel::makeCluster(Cores)
+doParallel::registerDoParallel(cl)
+
+S_time<- Sys.time()
+
+results<- foreach(i=1:4000, .combine=rbind) %dopar%{
+  Mean<- mean(rnorm(100000, mean=10, sd=3))
+  
+}
+
+E_time<- Sys.time()
+
+parallel::stopCluster(cl) 
+
+```
+
+Seeing how much time the parallel loop took: 
+
+```{r}
+t_time<- E_time - S_time
+print(t_time)
+
+```
+
+Running the loop in parallel took 6.77 seconds. My predicted value was right around this value as well, about 6.8 seconds. Without running in parallel and using 1 core instead 4 cores, the loop would have taken my computer about 27 seconds. The theoretical time is around the same as my actual time when running in parallel because there were no other applications taking up computing power. This allows the work to be distributed efficiently between usable threads with no delays or system bottenecks.  
+
+
